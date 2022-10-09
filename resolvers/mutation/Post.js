@@ -72,13 +72,13 @@ const userResolvers = {
     removeLike: authenticated(async (root, args, ctx, info) => {
       try {
         const post = await PostSchema.findOneAndUpdate(
-          { _id: id },
+          { _id: args.id },
           {
             $inc: { likes: -1 },
           }
         );
         return {
-          message: 'successfully removed post',
+          message: 'successfully removed like',
         };
       } catch (error) {
         throw new Error('some error');
