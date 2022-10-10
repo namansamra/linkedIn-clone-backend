@@ -15,6 +15,7 @@ const server = new ApolloServer({
       auth = req.headers.authorization;
       authType = req.headers['x-auth-type'];
       if (auth && authType) {
+        console.log(auth, authType);
         currentUser = await findOrCreateUser(auth, authType);
       }
     } catch (err) {

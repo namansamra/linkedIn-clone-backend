@@ -2,12 +2,11 @@ const User = require('../db/Models/User');
 const { OAuth2Client, auth } = require('google-auth-library');
 const axios = require('axios');
 
-const oauthClientId =
-  '663390552587-erbt6bch4a4onfilahm9gtlkevfj9pnb.apps.googleusercontent.com';
+const oauthClientId = process.env.OAUTH_CLIENT_ID;
 const client = new OAuth2Client(
   oauthClientId,
-  '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',
-  'http://localhost:3000'
+  process.env.OAUTH_SECRET_KEY,
+  process.env.OAUTH_REDIRECT_URI
 );
 
 exports.findOrCreateUser = async (auth, authType) => {
@@ -31,6 +30,7 @@ const getGoogleUserInfo = async (access_token) => {
 };
 
 const verifyAuth = async (authString, authType) => {
+  console.log('inside verify auth');
   try {
     if (authType == 'code') {
       const {
@@ -41,10 +41,11 @@ const verifyAuth = async (authString, authType) => {
         audience: oauthClientId,
       });
       const info = ticket.getPayload();
+      console.log(info, 'getToken info google type code');
       return { ...info, access_token: access_token };
     } else {
       const info = await getGoogleUserInfo(authString);
-      console.log(info);
+      console.log(info, 'google user info type auth string');
       return info;
     }
   } catch (err) {
