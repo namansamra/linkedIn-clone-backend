@@ -41,6 +41,8 @@ const Mutation = gql`
     addPost(input: ADD_POST_INPUT): response
     addComment(input: ADD_COMMENT_INPUT): response
     addLike(input: ADD_LIKE_INPUT): response
+    savePost(id: ID!): response
+    unsavePost(id: ID!): response
     removePost(id: ID!): response
     removeComment(id: ID!, postId: ID!): response
     removeLike(id: ID!): response

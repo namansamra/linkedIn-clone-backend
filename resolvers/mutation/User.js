@@ -25,6 +25,40 @@ const userResolvers = {
         throw new Error('Some error');
       }
     }),
+    savePost: authenticated(async (root, args, ctx, info) => {
+      const postId = args.id;
+      try {
+        await UserSchema.findOneAndUpdate(
+          { _id: ctx.currentUser._id },
+          {
+            $push: { savedPosts: postId },
+          }
+        );
+        return {
+          message: 'successfully saved post',
+        };
+      } catch (error) {
+        console.log(error);
+        throw new Error('some error');
+      }
+    }),
+    unsavePost: authenticated(async (root, args, ctx, info) => {
+      const postId = args.id;
+      try {
+        await UserSchema.findOneAndUpdate(
+          { _id: ctx.currentUser._id },
+          {
+            $pull: { savedPosts: postId },
+          }
+        );
+        return {
+          message: 'successfully unsaved post',
+        };
+      } catch (error) {
+        console.log(error);
+        throw new Error('some error');
+      }
+    }),
   },
 };
 module.exports = userResolvers;

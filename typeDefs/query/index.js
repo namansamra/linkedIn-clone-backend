@@ -10,6 +10,7 @@ const Query = gql`
     user(id: ID!): User
     comments: [Comment]
     post(id: ID!): Post
+    savedPosts: [Post]
   }
 `;
 module.exports = Query;

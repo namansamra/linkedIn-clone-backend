@@ -1,7 +1,6 @@
 const { gql } = require('apollo-server');
 const { PostSchema, UserSchema } = require('../../db/Models');
 const { authenticated } = require('../authChecker');
-const mongoose = require('mongoose');
 const userResolvers = {
   Query: {
     posts: authenticated(async (root, args, ctx, info) => {
@@ -35,6 +34,37 @@ const userResolvers = {
       } catch (error) {
         console.log(error);
         throw new Error('Some error occured in fetching post');
+      }
+    }),
+    savedPosts: authenticated(async (root, args, ctx, info) => {
+      try {
+        const data = await UserSchema.findOne({
+          _id: ctx.currentUser._id,
+        })
+          .populate([
+            {
+              path: 'savedPosts',
+              populate: {
+                path: 'user',
+              },
+            },
+            {
+              path: 'savedPosts',
+              populate: {
+                path: 'comments',
+                populate: {
+                  path: 'userId',
+                },
+              },
+            },
+          ])
+          .select('savedPosts') //projection
+          .exec();
+
+        return data.savedPosts;
+      } catch (error) {
+        console.log(error);
+        throw new Error('some error');
       }
     }),
   },

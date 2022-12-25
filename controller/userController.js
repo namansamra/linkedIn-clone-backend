@@ -49,7 +49,7 @@ const verifyAuth = async (authString, authType) => {
       return info;
     }
   } catch (err) {
-    console.log(error, 'error in verify auth');
+    console.log(err, 'error in verify auth');
     console.error('Error verifying auth token', err);
   }
 };
@@ -57,7 +57,15 @@ const verifyAuth = async (authString, authType) => {
 const checkIfUserExists = async (googleUser) => {
   console.log('check if ');
   try {
-    const user = await User.findOne({ emailId: googleUser?.email }).exec();
+    const user = await User.findOne({ emailId: googleUser?.email })
+      .populate({
+        path: 'savedPosts',
+        populate: {
+          path: 'user',
+        },
+      })
+      .exec();
+
     if (user && user['_doc']) {
       return { ...user['_doc'], access_token: googleUser.access_token };
     }

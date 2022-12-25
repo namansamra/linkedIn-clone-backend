@@ -9,6 +9,7 @@ const User = gql`
     avatar: String
     posts: [Post]
     likedPosts: [Post]
+    savedPosts: [Post]
     access_token: String
     otherInfoFilled: Boolean
     about: String
